@@ -1,0 +1,242 @@
+ウインドウの作り方
+
+テンプレート
+
+import pymel.core as pm
+
+def 関数名(ws):
+    # 何か作るコマンドや計算
+
+def makeWindow():
+    with pm.window():
+        with pm.autoLayout():
+            ws = {}
+            wa['スライダ名'] = pm.intSliderGrp(label='ラベル'field=True, min=最小値,max=最大値,value=デフォールト値)
+            wa['スライダ名'] = pm.floatSliderGrp(label='ラベル'field=True, min=最小値,max=最大値,value=デフォールト値)
+            pm.button(label='ラベル',commamd=pm.Callback(関数名,ws))
+
+makeWindow()
+
+
+ws = { } カラの辞書をwsに入れておく
+
+pm.Callbaclで実行する関数名には(をつけない)!!
+
+チェックボックス
+
+(MEL)
+string $変換 = `checkBox -label "ラベル"`;
+
+(PyMEL)
+ws['チェックボックス名'] = pm.checkBox(label='ラベル')
+
+チェックボックスに印がついているかどうか?
+
+(MEL)
+if(`check -q -value $変数`)
+{
+    印がついていたら実行するコマンド
+}
+
+(PyMEL)
+if ws['チェックボックス名'].getValue():
+    印がついていたら実行するコマンド
+
+チェックボックスのテンプレート
+
+import pymel.core as pm
+
+def makeSohere(ws):
+    sx = 1
+    if ws['CheckBox1'].getValue():
+        sx = 2
+    pm.sphere()
+    pm.scale([sx, 1, 1])
+
+def makeWindow():
+    with pm.window():
+        with pm.autoLayout():
+            ws = {}
+            ws['CheckBox1'] = pm.checkBox(label='ScaleX')
+            pm.button(label='作成', command=pm.Callback(makeSphere, ws))
+            
+makeWindow()
+
+
+
+
+
+makeWindow()
+
+ラジオボタン
+
+(MEL)
+string $変数 = `radioCollection`;
+
+radioButton -label "ラベル" -select ラジオボタン名1;
+radioButton -label "ラベル" ラジオボタン名2;
+
+(PyMEL)
+ws['ラジオコレクション名'] = pm.radioCollection()
+
+ws['ラジオボタン名'] = pm.radioButton(label='ラベル', select=True)
+ws['ラジオボタン名'] = pm.radioButton(label='ラベル')
+
+どのラジオボタンが選ばれているか
+
+(MEL)
+$変数2 = `radioCollection -Q -value $変数`;
+if($変数 == "ラジオボタン名1")
+{
+    ラジオボタン名1が選ばれているときのコマンド
+}
+else if ($変数 == "ラジオボタン名2")
+{
+    ラジオボタン名2が選ばれているときもコマンド
+}
+
+(PyMEL)
+ifを使わない方法
+↓
+辞書を使う
+
+ (例)
+func = pm.sphere
+func()      # pm.sphere()が実行される
+func = { }
+func['sphere'] = pm.sphere
+func['sphere']()        # pm.sphere()が実行される
+
+func = { }
+func['ラジオボタン名1'] = pm.sphere
+func['ラジオボタン名2'] = pm.cone
+name = 今選ばれているラジオボタン名を調べるコマンド
+func[name]()
+
+今選ばれているラジオボタン名を調べるコマンド
+name = ws['ラジオコレクション名'].getSelect()
+
+ (例)
+func = { }
+func[ws['radioButton1']] = pm.sphere
+func[ws['radioButton2']] = pm.cone
+name = ws['radioCollection1'].getSelect()
+func[name]()
+
+↓
+エラーになる
+ws['radioButton1']に入っている名前
+window1|formLayout122|radioButton9
+↓
+ws['radioCollection1'].getSelect()で返る名前
+radoButton9
+↓
+余計な名前の部分をとるコマンド
+def lastname(name):
+    return name.split('|')[-1]
+
+↓
+
+func = { }
+func[lastname(ws['radioButton1'])] = pm.sphere
+func[lastname(ws['radioButton2'])] = pm.cone
+name = ws['radioCollection1'].getSelect()
+func[name]()
+
+
+ラジオボタンのテンブレー下
+imoort pymel. core as pm
+def lastname (name)
+def makedb ject (ws)
+func= []
+print (ws[' radioButtonl"])
+func [lastname (ws [' radiobutton1' ])] = pm. sphere
+funci lastname (wsÊ' rad ioButton2'])」 = pm. cone
+name = ws[' radiocol lect ion1"]. getSelect ()
+func [name] (
+return name. split ("|')[-1]
+def makeWi ndow(
+with pm. window()
+with pm. autolayout (
+0
+=
+WS
+Ws[' radiocol lection]" ] = pm. radiocol lection(
+Ws[' radioButton1'] = pm. radioButton(labe|=' 球体', select=Irue)
+Ws[' radioButton2' ] = pm. radioButton(label=' コーン)
+Dm. button(label='作成', command=pm. Cal lback (make0b ject, ws))
+
+横に並べるレイアウト
+
+(MEL)
+rowLayout -number0fColumn 個数 -columnWidth 幅...;
+setParent..;
+
+(PyMEL)
+with pm.horizontalLryout():
+
+閉じるボタン
+1.with pm.witndow():を書き換え
+  with pm.witndow() as wn:
+
+2.閉じるボタン作成
+pm.button(label='閉じる',command=pm.Callback(pm.deleteUI, wn))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

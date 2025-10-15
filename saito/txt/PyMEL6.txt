@@ -1,0 +1,254 @@
+PyMEL
+
+岩石、パーティクル
+
+リスト(配列)を作る
+
+変数 = [ ] #カラのリスト
+for i in range(10):
+    変数.append(2*i)
+↓
+変数 → [0,2,4,6,8,10,12,14,16,18]
+
+これを別の方法で行う
+
+変数 = [2*i for i in range(10)]
+↓
+内包表記
+
+岩石
+
+(MEL)
+
+～プログラム～
+
+(PyMEL)
+import pymel.core as pm
+
+def makeRock1():
+    pm.polyShere()
+    Iname = pm.lattice(objectCentred=True)
+
+ここまではOK
+
+float $sx = rand(1.0,3.0);
+float $sy = rand(1.0,3.0);
+float $sz = rand(1.0,3.0);
+↓
+rand()がPyMELにはない!!
+↓
+from random import uniform
+
+sx = uniform(1.0,3.0)
+sy = uniform(1.0,3.0)
+sz = uniform(1.0,3.0)
+↓
+s = [ ]
+for i in range(3):
+    s.append(uniform((1.0, 3.0))
+↓
+s = [uniform(1.0, 3.0) for i in range(3)]
+
+これを関数に追加
+
+(PyMEL)
+import pymel.core as pm
+
+def makeRock1():
+    pm.polySphere()
+    lname = pm.lattice(objectCentered=True)
+    s = [uniform(1.0, 3.0) for i in range(3)]
+    pm.scale(s)
+
+(MEL)
+string $points[] = `filterExpand -selectionMask 46 ($Iname[1] + ".pt[0:1][0:4][0:1]")`;
+for($obj in $points)
+
+(PyMEL)
+for obj in lname[1].pt:
+
+(MEL)
+select $obj;
+float $tx = rand(-0.6,0.6);
+float $ty = rand(-0.6,0.6);
+float $tz = rand(-0.6,0.6);
+move -r $tx $ty $tz;
+
+(PyMEL)
+    for obj in lname[1].pt:
+        pm.select(obj)
+        t = [uniform(-0.6,0.6) for i in range(3)]
+        pm.move(t,r=True)
+
+makeRock1()
+
+まとめ
+
+from random import uniform
+import pymel.core as pm
+
+def makeRock1():
+    pm.polySphere()
+    lname = pm.lattice(objectCentered=True)
+    s = [uniform(1.0, 3.0) for i in range(3)]
+    pm.scale(s)
+    for obj in lname[1].pt:
+        pm.select(obj)
+        t = [uniform(-0.6,0.6) for i in range(3)]
+        pm.move(t,r=True)
+        
+makeRock1()
+
+パーティクル
+
+(MEL)
+～プログラミング～
+
+(PyMEL)
+from random import uniform
+import pymel.core as pm
+
+def makeParticle1():
+
+パーティクルを作る方法の違い
+
+(MEL)
+particle -p 1 2 3 -p 4 5 6;
+
+(PyMEL)
+pm.particle(p=[[1,2,3],[4,5,6]])
+
+X,Y,Zの並んだリストのデータを作ってゆく
+
+points = [ ]
+for i in range(10):
+    x = uniform(-5,5)
+    y = uniform(-5,5)
+    z = uniform(-5,5)
+    points.append([x,y,z])
+pm.particle(p=points)
+↓
+def rand3():
+    return [uniform(-5,5) for i in range(3)]
+
+def makeParticle1():
+    pm.particle(p=[rand3() for i in range(10)])
+
+まとめ
+
+from random import uniform
+import pymel.core as pm
+
+def rand3():
+    return [uniform(-5,5) for i in range(3)]
+
+def makeParticle1():
+    pm.particle(p=[rand3() for i in range(10)])
+
+makeParticle1()
+
+練習問題
+from random import uniform
+import pymel.core as pm
+
+def makeRock2(num,xRange,yRange,zRange):
+num 個数
+xRange,yRange,zRange 岩石を作る範囲
+                      -xRangeからxRangeの範囲
+                      -yRangeからyRangeの範囲
+                      -zRangeからzRangeの範囲
+
+def makeParticle2(num,xRange,yRange,zRange):
+xRange,yRange,zRange パーティクルかを作る範囲
+                      -xRangeからxRangeの範囲
+                      -yRangeからyRangeの範囲
+                      -zRangeからzRangeの範囲
+
+
+
+from random import uniform
+import pymel. core as pm
+
+def makeRock2(num xRange,yRange,zRange):
+    for i in range(num):
+        pm.polySphere()
+        lnane = pm.lattice(objectCentered=True)
+        s = [uniform(1.0,3.0 for i in range (3)]
+        pm.scale(s)
+        tx = uniform(-xRange,xRange)
+        ty = uniform(-yRange,yRange)
+        tz = uniform(-zRange,zRange)
+        pm.move([tx,ty,tz])
+        for obj in lname[1].pt:
+            pm. select (obj)
+            t= [uniform(-0.6,0.6) for i in range (3)]
+            pm. move (t, r=True)
+makeRock2()
+
+これを内包表記にまとめる
+tx = uniform(-xRange,xRange)
+ty = uniform(-yRange,yRange)
+tz = uniform(-zRange,zRange)
+↓
+t = [ ]
+for r in [xRange,yRange,zRange]:
+    t.append(uniform(-r,r))
+
+このfor文で
+inの右にあるリストから
+ひとりずつ取り出してforの下を一回実行
+変数rに取り出したものが入れられる
+↓
+t = [uniform(-r,r) for r in [xRange,yRange,zRange]]
+
+
+from random import uniform
+import pymel.core as pm
+
+def makeRock2(num xRange,yRange,zRange):
+    for i in range(num):
+        pm.polySphere()
+        lnane = pm.lattice(objectCentered=True)
+        s = [uniform(1.0,3.0 for i in range (3)]
+        pm.scale(s)
+        t = [uniform(-r,r) for r in [xRange,yRange,zRange]]
+        pm.move(t)
+        for obj in lname[1].pt:
+            pm. select (obj)
+            t= [uniform(-0.6,0.6) for i in range (3)]
+            pm. move (t, r=True)
+makeRock2()
+
+
+with pm.autoLayout() as tab3:
+    ws["scaleXSlider"] = pm.floatSliderGrp(label="スケールX", field=True, min=0.0, max=10.0, value=1.0)
+    ws["scaleYSlider"] = pm.floatSliderGrp(label="スケールY", field=True, min=0.0, max=10.0, value=1.0)
+    ws["scaleZSlider"] = pm.floatSliderGrp(label="スケールZ", field=True, min=0.0, max=10.0, value=1.0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

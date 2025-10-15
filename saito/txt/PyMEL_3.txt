@@ -1,0 +1,215 @@
+PyMEL
+
+ウインドウ
+
+MEL
+window;
+showWindow;
+
+PyMEL
+import pymel.core as pm
+
+pm.window()
+pm.showWindow()
+
+PyMELではこのやり方はやらない!!
+
+PyMEL独自のやり方
+import pymel.core as pm
+
+with pm.window():
+
+:があるとその下のコマンドはインデントする:の下には
+一つ以上のコマンドが必要
+↓
+ダミーのコマンドを入れておく
+↓
+ダミーのコマンド
+pass
+何もしないコマンド
+
+ボタンをつける
+
+MEL
+window;
+columnLayout;
+showWindow;
+
+PyMEL
+import pymel.core as pm
+
+with pm.window():
+    with pm.autoLayout():
+        pm.button()
+
+
+colunmLayoutも使えるが
+PyMELでは代わりにpm.autoLayout()を使う
+レイアウトするときもwithを使う
+
+ボタンで何かを作る
+
+MEL
+window;
+columnLayout;
+button -label "作成" -command "sphere";
+showWindow;
+
+PyMEL
+import pymel.core as pm
+
+with pm.window():
+    with pm.autoLayout():
+        pm.button(label = "作成", command = pm.Callback(pm.sphere))
+
+commandの右にうつすMELのコマンド
+pm.Callback()を入れる
+MELのsphereコマンド → pm.sphere   # ()をつけない!!
+↓
+関数に()をつけないとその場では実行されない
+
+MEL
+プロシージャをボタンで実行
+global proc makeSphere()
+{
+    sphere;
+    scale 2 3 4;
+}
+window;
+columnLayout;
+button - label "作成" -command "makeSphere()" 
+showWindow;
+
+PyMEL
+import pymel.core as pm
+
+def makeSphere():
+    pm.sphere():
+    pm.scale([2, 3, 4])
+
+with pm.window():
+    with pm.autoLaout():
+        pm.button(label = "作成", command = pm.Callback(makeSphere))
+
+MEL
+global proc makeSphere()
+{
+    sphere;
+    scale $sx $sy $sz;
+}
+window;
+columnLayout;
+button - label "作成" -command "makeSphere(2, 3, 4)" 
+showWindow;
+
+PyMEL
+import pymel.core as pm
+
+def makeSphere(sx, sy, sz):
+    pm.sphere():
+    pm.scale([sx, sy, sz])
+
+with pm.window():
+    with pm.autoLaout():
+        pm.button(label = "作成", command = pm.Callback(makeSphere, 2, 3, 4))
+
+MELでmakeSphere(2, 3, 4)
+↓
+PyMELではpm.Callback(makeSphere, 2, 3, 4)
+
+PyMELで変更するところ
+MELではプロシージャの外で実行していたウインドウ関係のコマンド
+↓
+PyMELでは関数でまとめる
+
+importPymel.core as pm
+
+def makeSphere(sx, sy, sz):
+    pm.sphere():
+    pm.scale([sx, sy, sz])
+
+with pm.window():
+    with pm.autoLayout():
+    pm.button(label = "作成", command = pm.Callback(makeSphere, 2, 3, 4))
+
+makeWindow()
+
+スライダ
+
+MEL
+intSliderGrp -label "ラベル" -field true -min 最小値 -max 最大値 -value デフォールト値　スライダ名;
+floatSliderGrp -label "ラベル" -field true -min 最小値 -max 最大値 -value デフォールト値　スライダ名;
+
+PyMEL
+pm.intSliderGrp(label="ラベル",field=True, min 最小値 max 最大値 value=デフォールト値)
+pm.floatSliderGrp(label="ラベル",field=True, min 最小値 max 最大値 value=デフォールト値)
+
+PyMELではスライダ名をコマンドの中にうつさない
+↓
+辞書を使ってMEL同じことをする
+
+辞書はリスト(配列)に似ている
+
+辞書では番号ではなくて名前でデータを出し入れできる
+
+(例)
+d = {} #空っぽの辞書を変数dに入れる
+d["name1"] = 2
+
+d["name1"] = 2
+d["name2"] = 3
+d["name3"] = 4
+
+x = d["name1"] + d["name2"]
+# 2+3
+
+この辞書をスライダ名の代わりに使う
+
+ws = { }
+ws["スライダ名"] = pm.intSliderGrp(label="ラベル",field=True, min 最小値 max 最大値 value=デフォールト値)
+ws["スライダ名"] = pm.floatSliderGrp (label="ラベル" ,field true min 最小値 max 最大値 value デフォールト値)
+
+スライダの数値を調べる
+
+MEL
+int $変数 = `intSliderGrp -q -value スライダ名`;
+float $変数 = `floatSliderGrp -q -value スライダ名`;
+
+PyMEL
+変数 = ws["スライダ名"].getValue()   # intSliderGrp
+変数 = ws["スライダ名"].getValue()   # floatSliderGrp
+どちらも全く同じ方法
+
+global proc makeSphere()
+{
+    sphere;
+    scale $sx $sy $sz;
+}
+window;
+columnLayout;
+button - label "作成" -command "makeSphere(2, 3, 4)" 
+floatSliderGrp -label "スケールX" -field true -min 0.0 -max 10.0 -value 1.0 scaleXSlinder;
+floatSliderGrp -label "スケールY" -field true -min 0.0 -max 10.0 -value 1.0 scaleYSlinder;
+floatSliderGrp -label "スケールZ" -field true -min 0.0 -max 10.0 -value 1.0 scaleZSlinder;
+showWindow;
+
+PyMEL
+import pymel.core as pm
+
+def makeSphere(ws):
+    sx = ws["scaleXSlider"].getValue()
+    sx = ws["scaleYSlider"].getValue()
+    sx = ws["scaleZSlider"].getValue()
+    pm.sphere():
+    pm.scale([sx, sy, sz])
+
+def makeWindow():
+    with pm.window():
+        with pm.autoLayout():
+            ws = { }
+            ws["scaleXSlider"] = pm.floatSliderGrp(label="スケールX", field=True, min=0.0, max=10.0, value=1.0)
+            ws["scaleYSlider"] = pm.floatSliderGrp(label="スケールY", field=True, min=0.0, max=10.0, value=1.0)
+            ws["scaleZSlider"] = pm.floatSliderGrp(label="スケールZ", field=True, min=0.0, max=10.0, value=1.0)
+            pm.button(label="作成",command=pm.Callback(makeSphere, ws))
+
+makeWindow()

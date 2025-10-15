@@ -1,0 +1,160 @@
+キーフレーム
+
+あるオブジェクトにつけた
+キーフレームアニメーションｗｐ
+別のオブジェクトに
+タイミングをずらしてコピーする
+
+手順
+1.キーフレームのついたコピー元のオブジェクト元から
+  キーの打ってあるフレーム数、アトリビュート名、
+  アトリビュート値を調べる
+2.調べたフレーム数をずらす(ある数を加算)
+3.コピー先のオブジェクトにずらしたフレーム数、
+  同じアトリビュート名、同じアトリビュート値で、
+  キーを打つ
+
+1.
+  (1)調べるアトリビュート名を決める
+     変数 = オブジェクトの入った変数.attr('アトリビュート名')
+
+  (2)キーフレームのカーブをとってくる
+     変数2 = pm.findKeyframe(変数1, c=True)
+     c=True     #アニメーションのカーブを返す
+
+  (3)フレーム数、アトリビュート名、キーの個数
+     変数3 = pm.PyNode(変数2[0])
+
+     ・キーを打ってあるフレーム数
+       変数3.getTime(キーの番号)
+
+     ・キーのアトリビュート値
+       変数3.getValue(キー番号)
+
+     ・キーの個数
+       変数3.numKeys()
+
+(例)
+アクションのついた球体
+↓
+選択しておく
+s = pm.selected()                               # 選択されたものがsに入る
+attr = s[0].attr('tx')                          # attrにtranslateXが入る
+cn = pm.findKeyframe(attr, c=True)              # cnにカーブが入る
+c = pm.PyNode(cn[0])                    
+for i in range(c.numKeys()):
+    print(c.getTime(i),'→',c.getValue(i))
+
+2. 3.
+
+キーを打ってゆく手順
+
+(1) キーを打ちたいフレーム数を決める
+    pm.currentTime(キーを打つフレーム数)
+
+(2) アトリビュート値を変更
+    アトリビュートの入った変数.set(アトリビュート値)
+
+(3) キーを打つ
+    pm.setKeyframe(アトリビュートの入った変数)
+
+(例)
+球体を選択後に、コーンを選択
+s = pm.selected()                               # 選択されたものがsに入る
+attr = s[0].attr('tx')                          # attrにtranslateXが入る
+attr2 = s[1].attr('tx')                         # attr2にコピー先のtranslateXが入る
+cn = pm.findKeyframe(attr, c=True)               # cnにカーブが入る
+c= pm.PyNode(cn[0])
+for i in range(c.numKeys()):
+    pm.currentTime(c.getTime(i))
+    attr2.set(c.getValue(i))
+    pm.setKeyframe(attr2)
+
+s = pm.selected()                               # 選択されたものがsに入る
+attr = s[0].attr('tx')                          # attrにtranslateXが入る
+attr2 = s[1].attr('tx')                         # attr2にコピー先のtranslateXが入る
+cn = pm.findKeyframe(attr, c=True)              # cnにカーブが入る
+c= pm.PyNode(cn[0])
+for i in range(c.numKeys()):
+    pm.currentTime(c.getTime(i) + 30)           # 30フレーム後にコピー
+    attr2.set(c.getValue(i))
+    pm.setKeyframe(attr2)
+
+
+関数にまとめる
+def copyKey(name,num):
+    s = pm.selected() 
+    attr = s[0].attr(name)
+    attr2 = s[1].attr(name)
+    cn = pm.findKeyframe(attr, c=True)
+    c= pm.PyNode(cn[0])
+    for i in range(c.numKeys()):
+        pm.currentTime(c.getTime(i) + num)
+        attr2.set(c.getValue(i))
+        pm.setKeyframe(attr2)
+
+copyKey('tx',30)
+copyKey('ty',30)
+
+回転(rotate)がうまくコピーできない
+↓
+コピーされたアトリビュート値がかなり小さい
+↓
+角度の単位の違い
+c.getValue(i)で返る角度の単位→ラジアン
+↓
+ラジアンを角度に変換
+↓
+import math
+
+v = math.degrees(ラジアン)                      # vにラジアンから度数に変換した数値が入る
+
+↓
+ただし、回転(rotate)だけで実行する
+'rx','r','rz'
+↓
+if name in['rx','ry','rz']:                     #name == 'rx' || nsme == 'ry' || nse == 'rz'
+
+    v = math.degrees(ラジアン)
+↓
+関数にして追加
+def rtod(name, v):
+    if name in ['rx','ry','rz']:
+        v = math.degrees
+    return v
+
+
+
+まとめ
+
+import math
+import pymel.core as pm
+
+def rtod(name, v):
+    if name in ['rx','ry','rz']:
+        v = math.degrees(v)
+    return v
+
+def copyKey(name,num):
+    s = pm.selected() 
+    attr = s[0].attr(name)
+    attr2 = s[1].attr(name)
+    cn = pm.findKeyframe(attr, c=True)
+    c= pm.PyNode(cn[0])
+    for i in range(c.numKeys()):
+        pm.currentTime(c.getTime(i) + num)
+        attr2.set(rtod(name, c.getValue(i)))
+        pm.setKeyframe(attr2)
+
+
+
+
+
+
+
+
+
+
+
+
+

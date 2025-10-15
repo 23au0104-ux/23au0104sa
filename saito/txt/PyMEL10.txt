@@ -1,0 +1,165 @@
+キーフレームコピー
+
+キーの値(アトリビュート名)
+タンジェント
+
+ウエイト値
+
+タンジェントの読み込み
+
+入力側(input)のタンジェント
+intangent = pm.keyTangent(cn,q=True, ia=True)
+
+cn→調べたいキーフレームのカーブ
+intangent→そのカーブの全部のタンジェント
+
+出力側(output)のタンジェント
+outtangent = pm.keyTangent(cn,q=True, oa=True)
+
+タンジェントの設定(書き込み)
+
+入力側(input)のタンジェント
+for i,t in enumerate(intangent):
+    pm.keyTangent(cn2,e=True, index=[i, ], ia=t)
+
+enumerate()→リストの番号とデータの組を作る
+i → 今何番目のデータをtに入れているか
+t → intangentのデータの一つ
+cn → タンジェントを設定するキーフレームのカーブ
+
+出力側(output)のタンジェント
+for i,t in enumerate(outtangent):
+    pm.keyTangent(cn2,e=True, index=[i, ], oa=t)
+
+ウエイトのコピー
+
+ウエイトのコピー
+
+入力側(input)のウエイト
+inweight = pm.keyTange(c, q=True, iw=True)
+
+c → 調べたいキーフレームのカーブ
+inweght → そのカーブの全部のウエイト値
+
+出力側(output)のウエイト
+outweight = pm.keyTange(c, q=True, ow=True)
+
+ウエイトの設定(書き込み)
+
+入力側(input)のウエイト
+for i,t in enumerate(inweight):
+    pm.keyTangent(c2, e=True, index[i, ], iw=t)
+
+出力側(output)のウエイト
+for i,t in enumerate(outweight):
+    pm.keyTangent(c2, e=True, index[i, ], ow=t)
+
+ウエイトのロック
+読み取り
+(1)
+look = c,getWightsLocked(i)
+
+look→ロックしているかどうか(bool)
+c → キーフレームのカーブ
+i → 何番目のキーフレームか
+
+(2)
+look = pm.keyTangent(c, q=True, wt=True)
+
+設定(書き込み)
+c2.setWeightsLooked(i, lock)
+
+i番目のキーにlockの中身でロック
+
+(2)
+pm.keyTangent(c2, e=True, index=[i, ], wt=lock)
+
+まとめ
+
+locks = pm.keyTangent(c, q=True, wt=True)
+for i in range(c.numKeys()):
+    lock = c.getWeightsLocked(i)
+    c2.setWeightsLocked(i, lock)
+    pm.keyTangent(c2, e=True, index=[i, ], wt=locks[0])
+
+ウエイト値がinとoutで違う時
+↓
+うまくコピーができない
+↓
+読み込みと設定 (書き込み) をin、outで分けないでいっぺんにやる
+↓
+intangent = pm.keyTangent(cn,q=True, ia=True)
+outtangent = pm.keyTangent(cn,q=True, oa=True)
+for i,t in enumerate(zip(inweight, outweight)):
+    pm.keyTangent(cn2,e=True, index=[i, ], iw=iw, ow=ow)
+
+Infinityの設定
+
+Infinityが設定されているかどうか
+
+Pre Infinity(マイナス方向)
+変数 = c.getPreInfinityType()
+
+Post Infinity (プラス方向)
+変数 = c.getPostInfinityType()
+
+Infinityの設定
+
+Pre Infinity
+c.setPreInfinityType()
+
+Post Infinity
+c.setPostInfinityType()
+
+def copyInfinity(c,c2):
+    pre = c.getPreInfinityType()
+    c2.setPreInfinityType(pre)
+    post = c.getPostInfinityType()
+    c2.setPostInfinityType(post)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>正しい筋トレの知識を！！入門編</title>
+    <meta name="description" content="ディスクリプションを入力">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="下半身.css">
+    <!--[if lt IE 9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+    <script src="main.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        .box29 {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .box-title {
+            font-weight: bold;
+        }
+        .popup-button {
+            display: inline-block;
+            background: #b6beff;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .popup-content {
+            background: #ffaf74;
+            height: 100px;
+            padding: 10px;
+        }
+        .popup-content.hidden {
+            display: none;
+        }
+    </style>
+    <script>
+        function showAlert(message) {
+            alert(message);
+        }
+        function togglePopup(id) {
+            var content = document.getElementById(id);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+            } else {
+                content.classList.add('hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>正しい筋トレの知識を！！入門編</h1>
+        <nav>
+            <ul>
+                <li><a href="honki.html">トップ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <a href="#" id="page-top"><i class="blogicon-chevron-up"></i></a>
+
+        <article>
+            <h1>＜下半身！！＞</h1>
+            <p>ここで紹介するのは、主に下半身です。</p>
+
+            <div id="title"><h3>スクワット</h3></div>
+            <div style="text-align: center;"><img src="sukuwato.jpg" alt="スクワットの画像" /></div>
+            <div class="box29">
+                <div class="box-title">手順</div>
+                <p>両足を肩幅程度に広げ、椅子へ座る時のように、股関節から曲げていく。</p>
+                <p>身体をおろしたタイミングで一時停止してから上げましょう。</p>
+            </div>
+            <div>
+                <button class="popup-button" onclick="togglePopup('popup1')">ポイント</button>
+                <div id="popup1" class="popup-content hidden">
+                    <p>胸をはり、空気椅子をする感覚で膝を90度に曲げる</p>
+                    <p>膝がつま先よりも前に出ないようにすること</p>
+                </div>
+            </div>
+
+            <div id="title"><h3>ブルガリアンスクワット(大腿四頭筋）</h3></div>
+            <div style="text-align: center;"><img src="buragiru.jpg" alt="ブルガリアンスクワットの画像" /></div>
+            <div class="box29">
+                <div class="box-title">手順</div>
+                <p>片脚を椅子などにかけ、脚幅を広めにとりスクワットします。</p>
+                <p>太ももを伸ばすように、身体を降ろしていきましょう。</p>
+            </div>
+            <div>
+                <button class="popup-button" onclick="togglePopup('popup2')">ポイント</button>
+                <div id="popup2" class="popup-content hidden">
+                    <p>身体を起こすとき、筋肉が伸びきらないようにすること</p>
+                    <p>上記のスクワットと同じ要領でやること</p>
+                </div>
+            </div>
+
+            <div id="title"><h3>ブルガリアンスクワット（大殿筋）</h3></div>
+            <div style="text-align: center;"><img src="buragilian_daidennkin.jpg" alt="ブルガリアンスクワットの画像" /></div>
+            <div class="box29">
+                <div class="box-title">手順</div>
+                <p>片脚を椅子などにかけ、脚幅を狭めにとりスクワットします。</p>
+                <p>椅子に掛けた脚側のお尻を伸ばすイメージで降ろしていきましょう。</p>
+            </div>
+            <div>
+                <button class="popup-button" onclick="togglePopup('popup3')">ポイント</button>
+                <div id="popup3" class="popup-content hidden">
+                    <p>身体を起こすとき、筋肉が伸びきらないようにすること</p>
+                    <p>上記のスクワットと同じ要領でやること</p>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+    </footer>
+</body>
+</html>

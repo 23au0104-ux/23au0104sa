@@ -1,0 +1,256 @@
+PyMel
+
+前回の復習
+
+おまじない
+import pymel. core as pm
+
+PyMELコマンドの形
+pm.コマンド名(引数, ...)
+
+()は省略させない!!
+コマンド名はMELと大体同じ
+
+変数
+変数名 = 数値や計算式
+
+変数宣言(int, float, string)がない!!
+$もつけない!!
+
+計算に使う記号(演算子)
++ - * / % += -= *= /=
+MELとほぼ同じ
+-- と ++ がない
+
+関数
+MELのプロシージャの代わり
+
+def 関数名(引数, ...):
+    コマンドや計算
+
+
+関数の中にあるコマンドや計算には必ずインデント(スペース4つ)をつける
+ : をつける
+
+for文
+for 変数 in range(繰り返し回数):
+    コマンドや計算
+
+forの中にあるコマンドや計算には必ずインデント(スペース4つ)をつける
+ : をつける!!
+
+if文
+
+MEL
+if(条件式)
+{
+    コマンドや計算;
+}
+
+PyMEL
+if 条件式:
+    コマンドや計算
+
+ifの中にあるコマンドや計算には必ずインデント(スペース4つ)をつける
+ : をつける!!
+
+(例)
+MEL
+if($x > 3)
+{
+    sphere;
+}
+
+PyMEL
+if z > 3:
+    pm.sphere()
+
+別のパターン
+
+MEL
+if(条件式)
+{
+    コマンドや計算1;
+}
+
+else
+{
+    コマンドや計算2;
+}
+
+PyMEL
+if 条件式:
+    コマンドや計算1
+else:
+    コマンドや計算2
+
+MEL
+if(条件式1)
+{
+    コマンドや計算1;
+}
+else if(条件式2)
+{
+    コマンドや計算2;
+}
+else
+{
+    コマンドや計算3;
+}
+
+PyMEL
+if 条件式1:
+    コマンドや計算1
+elif 条件式2:
+    コマンドや計算2
+else:
+    コマンドや計算3
+
+フラグ
+
+MEL
+ls -l;
+現在、選択されているものの名前をかえすコマンド
+
+フラグをPyMELに書き換える方法
+
+その1
+1. - をとる
+2. 残りのフラグ名をPyMELコマンドの()の中にコピー
+3.その右に=Trueをつける
+
+ls -l;
+↓
+PyMEL
+pm.ls(l=True)
+
+その2
+フラグに数値などがついている場合
+
+MEL
+move -r 2 3 4;
+-rは単独のフラグ
+2 3 4 の部分はフラグと関係のない部分
+↓
+-rは相対的移動を表す
+(10, 20, 30)→(12, 23, 34)
+-rがない場合(絶対的移動)
+(10, 20, 30)→(2, 3, 4)
+
+この場合のフラグの書き換え方法
+1. -をとる
+2. 残りのフラグ名をPyMELコマンドの()の中にコピー
+3. その右に=Trueをつける
+4. 残りの数値の部分 → 移したフラグの左にコピー
+                       (数値が2つ以上→[]で囲む)
+                       (数値と[]の間に、カンマを挟む)
+PyMEL
+pm.move([2, 3, 4],r=True)
+
+MEL
+rotate -ws -p 0 0 0 0 $r 0;
+↓
+フラグの部分
+-ws
+-p 0 0 0
+
+PyMEL
+pm.rotate([0, r, 0], ws=True, p=[0, 0, 0])
+
+数値とペアになっているフラグの書き換え
+1. -をとる
+2. 残りのフラグ名をPyMELコマンドの()の中にコピー
+3. 数値の部分を=をつけた右にコピー
+    数値が2つ以上ある場合 → []で囲って間に、カンマを入れる
+
+アサイン
+MEL
+string $name[] = 'sphere';
+
+PyMEL
+name = pm.sphere
+
+配列
+int $array= [];
+int $array[0] = 2;
+int $array[1] = 3;
+int $array[2] = 4;
+ 
+PyMELでは配列のことをリストという
+$array= [];            →配列を変数に入れておく
+$array[0] = 2;
+$array[1] = 3;
+$array[2] = 4;
+
+(例)
+name = pm.sphere()
+↓
+name[0] → "nurbsSphere1"
+name[1] → "makeNurbsSphere1"
+
+アトリビュート
+
+MEL
+アトリビュートの数値を変数に入れるコマンド
+float $tx = 'getAttr ($name[0] + ".tx")';
+
+PyMEL
+tx = pm.getAttr(name[0] + ".tx")
+
+PyMELだけの方法
+tx = name[0].tx.get()
+
+MEL
+アトリビュートの数値を設定するコマンド
+setAttr ($name[0] + ".tx")2.5;
+
+PyMEL
+pm.setAttr($name[0] + ".tx",2.5)
+
+PyMELだけの方法
+name[0].tx.set(2.5)
+
+ (例)
+
+global proc circleObjects1 (float $rad, int $num)
+{
+    int $i;
+    float $r;
+    float $ty;
+    $r = 0.0;
+    $ty = 0.0;
+    
+    for($i = 0; $i < $num; $i++)
+    {
+        string $name[] = `sphere`;
+        setAttr ($name[0] + ".tx")$rad;
+        rotate -ws -p 0 0 0 0$r 0;
+        setAttr ($name[0] + ".ty") $ty;
+        $r += 30.0;
+        $ty += 0.5;
+    }
+}
+
+PyMEL
+
+def spiralObjects1(rad,num):
+    r = 0.0
+    ty = 0.0
+    for i in range(num):
+        name = pm.sphere()
+        name[0].tx.set(rad)
+        pm.rotate([0, r, 0],ws=True, p=[0, 0, 0])
+        name[0].ty.set(ty)
+        r += 30.0
+        ty += 0.5
+
+練習問題
+
+def spiralObjects2(rad,num,iy):
+iy Y方向の増減値
+
+def spiralObjects3(rad, num ,iy):
+球体の代わりに円(circle)を使ってチューブ形にする
+MELの時のコマンド
+select -all;
+loft;

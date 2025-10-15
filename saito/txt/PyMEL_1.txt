@@ -1,0 +1,215 @@
+Pymel
+Mayaで使えるようにしたPython
+
+PyMEL
+
+文法はMELとかなり違う
+
+実行方法
+スクリプトエディタ→Pythonタブ
++ でPythonタブを追加
+PyMELを実行するときのおまじないが必要
+
+import pymel.core as pm
+↓
+モジュール(pymel.core)を読み込んで(import)
+as pm でPyMELのコマンドをpmによって実行できる
+
+PyMELのコマンド
+
+pm.コマンド名(引数,.....)
+
+引数はないこともある
+;(セミコロン)はいらない!!
+()は省略できない!!
+
+MEL
+sphere;
+
+PyMEL
+pm.sphere()
+
+作った球体を移動
+
+MEL
+sphere;
+move 1 2 3;
+
+PYMEL
+pm.sphere()
+pm.move([1,2,3])
+
+数値は[]に入れて, (カンマ)で区切る
+
+回転、スケール
+
+MEL
+sphere;
+move 1 2 3;
+rotate 30 45 60;
+scale 2 3 4;
+
+PyMEL
+pm.sphere()
+pm.move([1,2,3])
+pm.rotate([30,45,60])
+pm.scale([2,3,4])
+
+変数
+
+MEL
+int $s;
+float $y;
+$x = 2;
+$y = 3.14;
+$z = "nurbsShpere1";
+
+PyMEL
+x = 2
+y = 3.14
+z = "nurbsSphere1"
+
+変数宣言がない!!(int,float,stringいらない)
+$ もつけない!!
+; もつけない!!
+
+(例)
+MEL
+float $z;
+$z = $x + $y;
+
+PyMEL
+z = x + y
+
+計算に使える記号(演算子)
+MELとほぼ同じ
++ - * /
++= -= *= /=
+% %=
+()
+
+MEL違うところ
+MEL
+$x++; // $xの中身に1を足し算
+$x--; // $xの中身から1を引き算
+
+PyMEL
+++,-- どちらでもない!!
+そのかわり以下の方法で計算
+x += 1
+x -= 1
+<<++と--がない>>
+
+MELのプロシージャ
+global proc プロシージャ名(引数, .....)
+{
+    コマンドや計算;
+}
+
+PyMELの関数
+def 関数名(引数, .....):
+    コマンドや計算
+
+{}はいらない!!
+関数の中身の範囲がどこまでか?
+↓
+インデントを使う!!
+インデントとは行頭のスペース
+インデントで使うスペースは全部同じ大きさにする!!
+スペースは4個が一般的!!
+スペースの代わりにタブも使える → しかし使わない!!
+スペースには日本語のスペースも入れない!!
+
+ (例)
+MEL
+gloabl proc makeSphere1()
+{
+    sphere;
+    move 1 2 3;
+    rotate 30 45 60;
+    scale 2 3 4;
+}
+
+PyMEL
+def makeSphere1():
+    pm.sphere()
+    pm.move([1,2,3])
+    pm.rotate([30,45,60])
+    pm.scale([2,3,4])
+
+makeSphere1()
+
+<<スクリプトを全部選択してTabキーで綺麗になる>>
+
+引数がある場合
+
+MEL
+gloabl proc makeSphere1(float $sx, float $sy, float $sz)
+{
+    sphere;
+    move 1 2 3;
+    rotate 30 45 60;
+    scale $sx $sy $sz;
+}
+
+PyMEL
+def makeSphere1(sx, sy, sz):
+    pm.sphere()
+    pm.move([1,2,3])
+    pm.rotate([30,45,60])
+    pm.scale([sx, sy, sz])
+
+makeSphere1(2, 3, 4)
+
+for (ループ)
+
+MEL
+int $i;
+for($i = 0; $i < 10; $i++)
+{
+    コマンドや計算; ←10回繰り返される
+}
+
+PyMEL
+for i in range(10):
+    コマンドや計算
+
+{} はいらない!!
+繰り返すコマンドや計算の範囲
+↓
+インデントで決まる!!
+上の関数と同じ
+
+ (例)
+
+MEL
+global proc circleSphere1()
+{
+    int $i;
+    float $r = 0.0;
+    
+    for($i = 0; $i < 4num; $i++)
+    {
+        sphere;
+        move $rad 0 0;
+        rotate -ws -p 0 0 0 0 $r 0;
+        $r = $r + 360.0 / $num;
+    }
+}
+
+PyMEL
+def circleSphere1(rad, num):
+    r = 0.0
+    for i in range(num):
+        pm.sphere()
+        pm.move([rad, 0, 0])
+        pm.rotate([0, r, 0], ws=True, p=[0, 0, 0])
+        r = r + 360.0 / num
+
+circleSphere1(8.0, 10)
+
+練習問題
+
+def circleSphere2(rad, num, s)
+
+s→球体のスケール値(ScaleX,Y,Z全部同じ)

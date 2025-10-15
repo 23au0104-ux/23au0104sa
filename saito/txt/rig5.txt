@@ -1,0 +1,107 @@
+リグ
+
+優先角
+
+ジョイントのクラスにコマンド(メソッド)追加
+MyJointListに優先角の設定を頼む
+↓
+MyJointListからMyJointに設定する
+
+Mayaでマウスによってジョイントを作ったとき
+joint -p -0.19....;
+joint -p 2.01....;
+joint -e -zso -oj xyz -sao yup joint1;
+joint -p 0.62....;
+joint -e -zso -oj xyz -sao yup joint2;
+
+-oj xyz ジョイントの向き(X方向)
+-sao yup ジョイントの上向き(Y方向)
+
+ルートジョイント以外で上の設定をする
+if self.pj:
+    pm.joint(pj,e=True,zso=True,oj='xyz',sao='yup')
+↓
+MyJointのmake()のなか(最後)
+
+優先角(Preferred Angle)の設定
+
+設定に必要なデータ
+・どのジョイントに設定するか
+　↓
+　ジョイント番号(作った順番)
+・優先角の数値
+　↓
+　X,Y,Z
+
+リグのデータファイルに優先角のデータを追加
+
+1. データの形式を決める
+pa ジョイント番号X Y Z
+
+2. toList()の辞書にfuncにpa追加
+func = {'js':jsToList,'pa':paToList}
+
+3. 変換する関数を作る(paToList)
+def paToList(d):
+    return[int(d[0]),[float(d[1]),float(d[2]),float(d[3])]]
+
+優先角を設定するのはMyJointのなか
+↓
+優先角をMyJointに覚えさせておくメソッド追加
+def setPreferredAngle(self,):    #pa→[X,Y,Z]
+    self.pa = pa
+↓
+実際に優先角設定するコマンドとメソッド
+
+優先角設定コマンド
+self.j.preferredAngle.set(self.pa)
+↓
+優先角が設定されているジョイントのみコマンド実行
+↓
+def__init__(self,pj,p):の中に追加
+    self.pa = None
+↓
+if self.pa:
+    self.j.preferredAngle.set(self.pa)
+↓
+
+MyJointのmake()の最後に追加
+if self.pa:
+    self.j.preferredAngle.set(self.pa)
+
+優先角を設定する関数
+
+def setPreferredAngle(rigdata):
+    ジョイントリスト(MyJointList)の中にある
+    MyJointのリストからジョイント番号であらわされる
+    MyJointのインスタンスを取り出して
+    メソッドsetPreferredAngle(self,pa)を実行
+    ジョイント番号と優先角([X,Y,Z])は
+    rigdata['pa']に入っている
+    [番号,[X,Y,Z]]
+↓
+ジョイントリスト(MyJointList)のインスタンスを取り出す
+js = rigdata['jlist']
+↓
+jsはクラスのインスタンスでリストそのものではない
+↓
+jsの中に入っているself.js(MyJointのリスト)の
+中から番号で取り出したい
+↓
+いちいちself.jsをjsの中から取り出さないで
+直接jsから取り出せるようにする
+js[番号]→番号のMyJointインスタンスが取り出せる
+↓
+jsをまるでリストのように扱えるようにする
+↓
+MyJointListに特別なメソッドを追加
+def __getitem__(self,n):    #n→番号
+    return self.js[n]
+↓
+def setPreferredAngle(rigdata):
+    js = rigdata['jlist']
+    for n,pa in rigdata['pa']: #n→番号,pa→[X,Y,Z]
+        js[n].setPreferredAngle(pa)
+
+↓
+makeAll()にsetPreferredAngle(rigdata)追加

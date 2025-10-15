@@ -1,0 +1,109 @@
+キーフレームアニメーション
+
+カーブのタンジェントをコピー
+
+タンジェンのデータをしらべる
+
+inタンジェント
+pm.Key Tangent(調べたいカーブ, q = True, ia = True)
+
+outタンジェント
+pm.Key tragent(調べたいカーブ, q = True, 0a = True)
+
+タンジェントのデータをコピー先に設定
+
+inタンジェント
+pm.KeyTangent(設定したいカーブ,e =True, index = [キー番号,], ia=設定する数値)
+
+outタンジェント
+pm.keyTangent(設定したいカーブ,e =True, index = [キー番号,], oa=設定する数値)
+
+前回のスクリプトにタンジェントコピーを追加
+
+その前にスクリプトに整理
+↓
+各機能を関数にまとめる
+
+グラフエディタのカーブを選んでコピーする
+
+MELコマンド
+findAnimCurves graphEditor1FromOutliner;
+↓
+MELでしか実行できないコマンドをPyMELで実行
+pm.mel.eval('findAnimCurves graphEditor1FromOutliner')
+↓
+結果は変数を入れる
+attrs = pm.mel.eval('findAnimCurves graphEditor1FromOutliner')
+↓
+attrsにはアトリビュート名が文字列になって
+リストとして返ってくる
+['nurbsSphere1_translateX', 'nurbsSphere1_translateY']
+↓
+nurbsSphere1_translateX
+この名前がいらない!!
+↓
+いらない部分を除去する方法
+import re
+
+attrs = pm.mel.eval('findAnimCurves graphEditor1FromOutliner')
+for a in attrs:
+    a2 = re.sub('.*_','',a)        # .*_名前の前半部分
+　　print(a2)
+↓
+関数にしておく
+def getAttrName():
+    attrs = pm.mel.eval('findAnimCurves graphEditor1FromOutliner')
+    attr2 = []
+    for a in attrs:
+        attr2. append(re.sub('.*_','',a))
+　  return attrs2
+
+この関数を使ってcopykey()を実行する
+
+def copyKey2(num):
+    attrs = getAttrName()
+    for a in attrs:
+        copyKey(a, num)
+
+copyKey2(30)
+
+
+
+
+
+課題ヒント
+
+変数1 = 値スケールのスライダ値
+変数2 = キースケールのスライダ値
+
+def copyKeyframe(c, num ,name .attr2 ,変数1,変数2):
+    for i in range(c.numKeys()):
+        pm.currentTime(int(c.getTime(i)*変数2) + num)
+        attr2.set(rtod(name,c.getValue(i)*変数1))
+        pm.setKeyframe(attr2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

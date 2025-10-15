@@ -1,0 +1,212 @@
+PyMEL
+
+formLayout
+
+MEL
+
+window;
+string $変数1 = 'formLayout';
+string $変数2 = 'button';
+formLayout -edit
+           -attachForm $変数2 "top" ①
+           -attachForm $変数2 "right" ② 
+           -attachForm $変数2 "bottom" ③
+           -attachForm $変数2 "left" ④
+           $変数1;
+showWindo;
+
+PyMEL
+
+import pymel,core as pm
+
+def makeWindow():
+    with pm. window():
+        with pm. formLayout() as 変数1:
+            変数2 = pm.button()
+    変数1.attachForm(変数2,"top",①)
+    変数1.attachForm(変数2,"right",②)
+    変数1.attachForm(変数2,"bottom",③)
+    変数1.attachForm(変数2,"left",④)
+
+makeWindow()
+
+ボタン2個
+
+attachFormの設定だけでは
+ウインドウを大きくしたら
+ボタンがほかのボタンを隠してしまう
+↓
+ほかのボタンとの距離を一定にする設定
+
+MEL -attachControl 変数2 方向 距離 相手になるもの(ボタン)
+
+PyMEL
+form.attachControl(自分,方向,距離,相手になるもの(ボタン))
+
+相手と向き合った方向に設定する
+
+import pymel.core as pm
+
+def makeWindow():
+    with pm. window():
+        with pm. formLayout() as form:
+            b1 = pm.button()
+            b2 = pm.button()
+    form.attachForm(b1,"top",0)
+    form.attachForm(b1,"right",5)
+    form.attachForm(b1,"bottom",50)
+    form.attachForm(b1,"left",5)
+
+    form.attachControl(b2,"top",5,b1)
+    form.attachForm(b2,"right",5)
+    form.attachForm(b2,"bottom",0)
+    form.attachForm(b2,"left",5)
+
+makeWindow()
+
+
+tabLayout(タブレイアウト)
+
+MEL
+
+window;
+string $変数1 = 'formLayout';
+string $変数2 = 'button';
+
+string $変数3 = 'columnLayout';
+buttom;
+buttom;
+setParent..;
+
+string $変数4 = 'columnLayout';
+buttom;
+buttom;
+setParent..;
+
+tabLayout -edit -tabLabel 4変数3 "ラベル1" -tabLabel $変数4 "ラベル2" $変数2;
+
+formLayout -edit
+           -attachForm $変数2 "top"①
+           -attachForm $変数2 "right"②
+           -attachForm $変数2 "buttom"③
+           -attachForm $変数2 "left"④
+           $変数1;
+showWindow;
+
+PyMEL
+
+import pymel.core as pm
+
+def makeWindow():
+    with pm.window():
+        with pm.formLayout() as 変数1:
+            with pm.tabLayout() as 変数2:
+                with pm.autoLayout() as 変数3:
+                with pm. autoLayout():
+                    pm.button()
+                    pm.button()
+                with pm.autoLayout() as 変数4:
+                    pm.button()
+                    pm.button()
+
+    pm.tabLayout(変数2,edit=True, tabLabel=[[変数3,"ラベル1"],[変数4,"ラベル2"]])
+    変数1.attachForm(変数2,"top",①)
+    変数1.attachForm(変数2,"right",②)
+    変数1.attachForm(変数2,"bottom",③)
+    変数1.attachForm(変数2,"left",④)
+
+makeWindow()
+
+
+
+MEL
+
+tabLayout -edit -tabLabel $変数3 "ラベル1" -tabLayout $変数4 "ラベル2" $変数2;
+
+PyMEL
+
+pm.tabLayout(変数2,edit=True, tabLabel=[[変数3,"ラベル1"],[変数4,"ラベル2"]])
+
+MELコマンドのフラグの部分(-のついているとこと)
+-edit
+-tabLabel $変数3 "ラベル1"
+-tabLabel $変数4 "ラベル2"
+↓
+tabLabel=[変数3,"ラベル1"]
+tabLabel=[変数3,"ラベル2"]
+↓
+PyMELのコマンドのルール(引数)
+同じ名前のフラグは1つ以上選べない!!!
+(普通に変数は2つ以上あってもOK)
+↓
+tabLabel=[[変数3,"ラベル1"],[変数4,"ラベル2"]]
+
+フラグではない部分 (この部分を先にPyMELにうつす)
+$変数2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パスワード認証ページ</title>
+    <script>
+        function authenticate() {
+            const password = document.getElementById("password").value;
+            const correctPassword = "1234"; // ここで正しいパスワードを設定します
+
+            if (password === correctPassword) {
+                alert("認証成功！ページへ移動します。");
+                window.location.href = "mosohaso_home.html"; // 遷移先のページ
+            } else {
+                alert("パスワードが間違っています。");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>認証ページ</h1>
+    <p>以下にパスワードを入力してください。</p>
+    <input type="password" id="password" placeholder="パスワードを入力">
+    <button onclick="authenticate()">認証</button>
+</body>
+</html>

@@ -1,0 +1,54 @@
+シェーディング
+
+マテリアルのアサイン
+1.マテリアルを作る
+2.作ったマテリアルをオブジェクトにアサイン
+
+1.マテリアルを作る
+変数 = pm.createSurfaceShader('	マテリアル名')
+
+2.作ったマテリアルをオブジェクトにアサイン
+pn.sets(変数[1],feオブジェクトの変数)
+
+(例)
+name = pm.sphere()
+lambert = pm.createSurfaceShader('lambert')
+pm.sets(lambert[1],fe=name[0])
+
+マテリアルの色
+cr 赤　0.0 ～ 1.0
+cg 緑　0.0 ～ 1.0
+cb 青　0.0 ～ 1.0
+
+(例)
+lambert[0].cr.set(1.0)
+lambert[0].cg.set(0.5)
+lambert[0].cb.set(0.2)
+
+テクスチャのアサイン
+
+2Dテクスチャの作り方
+
+1. テクスチャ作成
+変数1 = pm.shadingNode('テクスチャ名',asTexture=True)
+2. place2dTextureを作成
+変数2 = pm.shadingNode('place2dTexture',asUtility=True)
+3. place2dTextureからテクスチャへの接続
+
+変数2.outUV >> 変数1.Coord
+
+変数2.outUvFilterSize >> 変数1.uvFilterSize
+
+4.テクスチャからマテリアルへの接続
+
+変数1.outColor >> 変数.color
+
+(例)
+name = pm.sphere()
+lambert = pm.creareSurfaceShader('lambert')
+pm.sets(lambert[1],fe=name[0])
+checker = pm.shadingNode('checker', asUtility=True)
+p2d = pm.shadingNode('place2dTexture', asUtility=True)
+p2d.outUV >> checker.uvCoord
+p2d.outUvFilterSize >> checker.uvFilterSize
+checker.outColor >> lambert[0].color
